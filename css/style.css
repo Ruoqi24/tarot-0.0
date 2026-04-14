@@ -1,0 +1,1658 @@
+/* ========================================
+   TARO - 塔罗牌抽卡网页样式
+   支持黑白主题切换
+   ======================================== */
+
+/* CSS Variables - 主题颜色定义 */
+:root {
+  /* 浅色主题 (默认) */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --accent-primary: #2c3e50;
+  --accent-secondary: #34495e;
+  --accent-gold: #d4af37;
+  --accent-gold-light: #f4d03f;
+  --accent-gold-dark: #b8860b;
+  --mystic-purple: #6b4c8a;
+  --mystic-blue: #2c3e50;
+  --border-color: #dddddd;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --card-back: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%);
+  --gradient-start: #f5f5f5;
+  --gradient-end: #e8e8e8;
+
+  /* 韦斯特塔罗牌金色配色 */
+  --rider-waite-gold: #c9a961;
+  --rider-waite-gold-light: #e8d5a3;
+  --rider-waite-gold-dark: #8b7355;
+  --rider-waite-blue: #1e3a5f;
+  --rider-waite-red: #8b2635;
+  --rider-waite-cream: #f5f0e1;
+}
+
+/* 深色主题 */
+[data-theme="dark"] {
+  --bg-primary: #0a0a12;
+  --bg-secondary: #12121f;
+  --bg-tertiary: #1a1a2e;
+  --text-primary: #f5f5f5;
+  --text-secondary: #b8b8d1;
+  --text-muted: #6b6b8f;
+  --accent-primary: #d4af37;
+  --accent-secondary: #c9a227;
+  --accent-gold: #d4af37;
+  --accent-gold-light: #f4d03f;
+  --accent-gold-dark: #b8860b;
+  --mystic-purple: #9b7cb6;
+  --mystic-blue: #4a6fa5;
+  --border-color: #2a2a4a;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --card-back: linear-gradient(135deg, #0d0d1a 0%, #1a0f2e 50%, #0d0d1a 100%);
+  --gradient-start: #0a0a12;
+  --gradient-end: #12121f;
+}
+
+/* 基础重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  border-color: var(--accent-gold);
+}
+
+/* 设置按钮 */
+.settings-toggle {
+  position: fixed;
+  top: 20px;
+  right: 80px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.settings-toggle:hover {
+  transform: scale(1.1) rotate(30deg);
+  border-color: #9b7cb6;
+  color: #9b7cb6;
+}
+
+/* 页面容器 */
+.page {
+  min-height: 100vh;
+  padding: 2rem;
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+
+/* 首页样式 - 只在 active 时显示 */
+.page.home-page {
+  display: none;
+}
+
+.page.home-page.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+}
+
+.logo {
+  margin-bottom: 3rem;
+}
+
+.logo-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.logo h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.5rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.logo .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  letter-spacing: 0.3rem;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  max-width: 500px;
+  line-height: 1.8;
+}
+
+/* 按钮样式 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--accent-primary);
+  color: var(--bg-secondary);
+  box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.btn-primary:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.btn-lg {
+  padding: 1.2rem 3rem;
+  font-size: 1.1rem;
+}
+
+/* 首页按钮组 */
+.home-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.home-buttons .btn {
+  min-width: 220px;
+}
+
+/* 页面标题 */
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+}
+
+.page-header h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.page-header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/* 牌阵选择页 */
+.spread-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.spread-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.spread-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent-gold);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.spread-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px var(--shadow-color);
+  border-color: var(--accent-gold);
+}
+
+.spread-card:hover::before {
+  transform: scaleX(1);
+}
+
+.spread-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.spread-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.spread-card .card-count {
+  display: inline-block;
+  padding: 0.2rem 0.8rem;
+  background: var(--bg-tertiary);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.spread-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* 牌阵说明弹窗 */
+.spread-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spread-modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 2.5rem;
+  position: relative;
+  animation: modalSlide 0.3s ease;
+}
+
+@keyframes modalSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+.modal-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.modal-content h4 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--accent-gold);
+}
+
+.modal-content p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.modal-content ol,
+.modal-content ul {
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.modal-content li {
+  margin-bottom: 0.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+/* 抽牌页 */
+.draw-page {
+  background: var(--bg-primary);
+}
+
+.draw-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* 问题输入 */
+.question-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.question-section input {
+  width: 100%;
+  max-width: 500px;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 50px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.3s;
+  font-family: inherit;
+}
+
+.question-section input:focus {
+  border-color: var(--accent-gold);
+}
+
+.question-section input::placeholder {
+  color: var(--text-muted);
+}
+
+/* 牌位槽区域 - 神秘风格 */
+.card-slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding: 2.5rem;
+  background:
+    linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 15, 46, 0.05) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(201, 169, 97, 0.3);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.1),
+    inset 0 0 30px rgba(201, 169, 97, 0.05);
+}
+
+.card-slot {
+  width: 130px;
+  text-align: center;
+}
+
+.slot-label {
+  font-size: 0.9rem;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.slot-position {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
+  font-style: italic;
+}
+
+.slot-area {
+  width: 100%;
+  aspect-ratio: 2/3;
+  border: 2px dashed rgba(201, 169, 97, 0.4);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: rgba(201, 169, 97, 0.5);
+  transition: all 0.4s ease;
+  background: rgba(26, 15, 46, 0.02);
+}
+
+.slot-area.filled {
+  border-style: solid;
+  border-color: var(--rider-waite-gold);
+  background: transparent;
+  box-shadow: 0 0 20px rgba(201, 169, 97, 0.2);
+}
+
+/* ========================================
+   韦斯特塔罗牌风格设计
+   ======================================== */
+
+/* 塔罗牌样式 */
+.tarot-card {
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+              0 0 40px rgba(212, 175, 55, 0.1);
+}
+
+.tarot-card:hover {
+  transform: translateY(-8px) rotateY(8deg) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4),
+              0 0 60px rgba(212, 175, 55, 0.2);
+}
+
+.tarot-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* 牌背 - 韦斯特风格 */
+.card-back {
+  background:
+    /* 中心玫瑰花图案 */
+    radial-gradient(ellipse at center,
+      transparent 0%,
+      transparent 25%,
+      rgba(201, 169, 97, 0.1) 26%,
+      rgba(201, 169, 97, 0.1) 30%,
+      transparent 31%,
+      transparent 35%,
+      rgba(201, 169, 97, 0.15) 36%,
+      rgba(201, 169, 97, 0.15) 45%,
+      transparent 46%
+    ),
+    /* 四角星形装饰 */
+    radial-gradient(circle at 15% 15%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    radial-gradient(circle at 85% 15%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    radial-gradient(circle at 15% 85%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    radial-gradient(circle at 85% 85%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    /* 中心装饰 */
+    radial-gradient(circle at center, rgba(139, 38, 53, 0.4) 0%, transparent 40%),
+    /* 主背景渐变 */
+    linear-gradient(135deg,
+      #1a0f2e 0%,
+      #2d1b4e 25%,
+      #1e3a5f 50%,
+      #2d1b4e 75%,
+      #1a0f2e 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--rider-waite-gold);
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(201, 169, 97, 0.3);
+}
+
+/* 牌背边框装饰 */
+.card-back::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px solid rgba(201, 169, 97, 0.4);
+  border-radius: 12px;
+}
+
+/* 牌背中心图案 */
+.card-back::after {
+  content: '☆';
+  font-size: 3rem;
+  color: var(--rider-waite-gold);
+  text-shadow:
+    0 0 20px rgba(201, 169, 97, 0.8),
+    0 0 40px rgba(201, 169, 97, 0.4);
+  z-index: 1;
+}
+
+/* 牌面正面 - 韦特塔罗风格 */
+.card-front {
+  background:
+    linear-gradient(135deg,
+      var(--rider-waite-cream) 0%,
+      #ebe5d5 50%,
+      var(--rider-waite-cream) 100%
+    );
+  transform: rotateY(180deg);
+  border: 4px solid var(--rider-waite-gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 30px rgba(201, 169, 97, 0.2),
+    0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 牌面图片 */
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
+/* 牌面内边框 */
+.card-front::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 2px solid var(--rider-waite-gold);
+  border-radius: 10px;
+  opacity: 0.6;
+}
+
+/* 牌面角落装饰 */
+.card-front::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  border-radius: 8px;
+}
+
+/* 正逆位标记 */
+.card-orientation {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--rider-waite-gold-light) 0%, var(--rider-waite-gold) 100%);
+  color: var(--rider-waite-blue);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--rider-waite-gold-dark);
+  z-index: 10;
+}
+
+.card-orientation.reversed {
+  background: linear-gradient(135deg, #c0392b 0%, #8b2635 100%);
+  color: white;
+  border-color: #6b1d28;
+}
+
+/* 牌堆区域 - 韦斯特风格 */
+.deck-section {
+  text-align: center;
+  padding: 2rem;
+}
+
+.deck-info {
+  margin-bottom: 1.5rem;
+}
+
+.deck-info h3 {
+  font-size: 1.3rem;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 2px;
+}
+
+.deck-info p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.deck-area {
+  display: inline-block;
+  position: relative;
+}
+
+.deck-card {
+  width: 140px;
+  aspect-ratio: 2/3;
+  background:
+    radial-gradient(ellipse at center, transparent 0%, transparent 30%, rgba(201, 169, 97, 0.1) 31%, rgba(201, 169, 97, 0.1) 40%, transparent 41%),
+    radial-gradient(circle at 15% 15%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    radial-gradient(circle at 85% 15%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    radial-gradient(circle at 15% 85%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    radial-gradient(circle at 85% 85%, rgba(201, 169, 97, 0.3) 0%, transparent 8%),
+    linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 50%, #1a0f2e 100%);
+  border-radius: 16px;
+  border: 3px solid var(--rider-waite-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(201, 169, 97, 0.2),
+    inset 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.deck-card::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px solid rgba(201, 169, 97, 0.4);
+  border-radius: 12px;
+}
+
+.deck-card::after {
+  content: '☆';
+  font-size: 3rem;
+  color: var(--rider-waite-gold);
+  text-shadow: 0 0 20px rgba(201, 169, 97, 0.8);
+  z-index: 1;
+}
+
+.deck-card:hover {
+  transform: translateY(-15px) scale(1.03) rotateY(5deg);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(201, 169, 97, 0.4);
+}
+
+.deck-card:active {
+  transform: translateY(-5px) scale(0.98);
+}
+
+.deck-count {
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  color: var(--accent-gold);
+  font-weight: 500;
+}
+
+/* 解牌页 */
+.result-page {
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+.result-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* 结果概览 */
+.result-summary {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.user-question {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.user-question::before {
+  content: '"';
+}
+
+.user-question::after {
+  content: '"';
+}
+
+.result-title {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.result-overview {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* 结果牌展示 */
+.result-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.result-card-item {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.result-card-item:hover {
+  box-shadow: 0 5px 20px var(--shadow-color);
+  transform: translateY(-3px);
+}
+
+.result-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.result-card-mini {
+  width: 60px;
+  aspect-ratio: 2/3;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--accent-gold);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.result-card-mini.reversed {
+  border-color: #e74c3c;
+}
+
+.result-card-mini .mini-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.result-card-info h4 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.result-card-info .position-label {
+  font-size: 0.85rem;
+  color: var(--accent-gold);
+}
+
+.result-card-content h5 {
+  font-size: 0.95rem;
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+}
+
+.result-card-content p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.result-card-content .card-advice {
+  margin-top: 0.8rem;
+  padding: 0.8rem;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--accent-gold);
+}
+
+/* 整体分析 */
+.overall-analysis {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.overall-analysis h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.analysis-content {
+  color: var(--text-secondary);
+  line-height: 1.9;
+  font-size: 1rem;
+}
+
+.analysis-content p {
+  margin-bottom: 1rem;
+}
+
+.action-advice {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
+  border-radius: 12px;
+  border-left: 4px solid var(--accent-gold);
+}
+
+.action-advice h4 {
+  font-size: 1rem;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.action-advice p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* 结果页按钮 */
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* 页脚 */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 3rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  .page {
+    padding: 1rem;
+  }
+
+  .logo h1 {
+    font-size: 2rem;
+    letter-spacing: 0.3rem;
+  }
+
+  .spread-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .card-slots {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .card-slot {
+    width: 100px;
+  }
+
+  .deck-card {
+    width: 120px;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .result-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .btn {
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .btn-back {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ========================================
+   Phase 4: AI智能解读
+   ======================================== */
+
+/* AI按钮 */
+.btn-ai {
+  background: linear-gradient(135deg, #9b7cb6 0%, #6b4c8a 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ai::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%
+  );
+  animation: aiShine 3s infinite;
+}
+
+@keyframes aiShine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.btn-ai:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(155, 124, 182, 0.4);
+}
+
+/* 模态框基础样式 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal.active {
+  display: flex;
+}
+
+/* AI配置模态框 */
+.ai-config-content {
+  max-width: 500px;
+  width: 100%;
+}
+
+.ai-config-form {
+  margin-top: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.form-select,
+.form-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-select:focus,
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.form-hint {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+/* AI解读模态框 */
+.ai-reading-content {
+  max-width: 700px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.ai-reading-body {
+  margin-top: 1.5rem;
+}
+
+/* AI加载动画 */
+.ai-loading {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.ai-loading-spinner {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1.5rem;
+  border: 4px solid var(--bg-tertiary);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.ai-loading p {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.ai-loading small {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* AI结果 */
+.ai-result {
+  animation: fadeIn 0.5s ease;
+}
+
+.ai-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ai-badge {
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, #9b7cb6 0%, #6b4c8a 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.ai-time {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.ai-result-content {
+  line-height: 2;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  white-space: pre-wrap;
+}
+
+.ai-result-content p {
+  margin-bottom: 1rem;
+}
+
+.ai-result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* 解读动画效果 */
+@keyframes typing {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-typing {
+  animation: typing 0.3s ease forwards;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 隐藏元素 */
+.hidden {
+  display: none !important;
+}
+
+/* 淡入动画 */
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ========================================
+   Phase 2: 动画优化
+   ======================================== */
+
+/* 洗牌动画 */
+@keyframes shuffle {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-5px) rotate(-2deg); }
+  50% { transform: translateX(5px) rotate(2deg); }
+  75% { transform: translateX(-3px) rotate(-1deg); }
+}
+
+.deck-card.shuffling {
+  animation: shuffle 0.5s ease-in-out 3;
+}
+
+/* 抽牌飞入动画 */
+@keyframes drawFlyIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.5) rotateY(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.1) rotateY(90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateY(180deg);
+  }
+}
+
+.tarot-card.drawing {
+  animation: drawFlyIn 0.6s ease-out forwards;
+}
+
+/* 3D翻牌效果增强 */
+.tarot-card {
+  perspective: 1000px;
+}
+
+.tarot-card .card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.tarot-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* 牌堆发光效果 */
+@keyframes deckGlow {
+  0%, 100% { box-shadow: 0 4px 15px var(--shadow-color); }
+  50% { box-shadow: 0 4px 30px var(--accent-gold), 0 0 60px rgba(212, 175, 55, 0.3); }
+}
+
+.deck-card.glowing {
+  animation: deckGlow 2s ease-in-out infinite;
+}
+
+/* 牌位高亮 - 神秘光芒效果 */
+@keyframes slotHighlight {
+  0%, 100% {
+    border-color: rgba(201, 169, 97, 0.4);
+    background: rgba(26, 15, 46, 0.02);
+    box-shadow: 0 0 10px rgba(201, 169, 97, 0.1);
+  }
+  50% {
+    border-color: var(--rider-waite-gold);
+    background: rgba(201, 169, 97, 0.1);
+    box-shadow: 0 0 30px rgba(201, 169, 97, 0.3), inset 0 0 20px rgba(201, 169, 97, 0.1);
+  }
+}
+
+.slot-area.active {
+  animation: slotHighlight 2s ease-in-out infinite;
+  border-style: solid;
+}
+
+/* 粒子效果 */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleFloat 1s ease-out forwards;
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(0);
+  }
+}
+
+/* 震动效果 */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+  20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* 脉冲效果 */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ========================================
+   Phase 2: 历史记录页面
+   ======================================== */
+
+/* 历史记录页 */
+.history-page {
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+.history-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.empty-state p {
+  margin-bottom: 1.5rem;
+}
+
+/* 历史记录列表 */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.history-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 20px var(--shadow-color);
+  border-color: var(--accent-gold);
+}
+
+.history-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+}
+
+.history-item-title {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.history-item-spread {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.history-item-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.history-item-question {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-item-question::before {
+  content: '"';
+}
+
+.history-item-question::after {
+  content: '"';
+}
+
+.history-item-cards {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.history-card-tag {
+  padding: 0.3rem 0.8rem;
+  background: var(--bg-tertiary);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+}
+
+.history-card-tag.reversed {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.history-item-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.history-item:hover .history-item-actions {
+  opacity: 1;
+}
+
+.history-item-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--bg-tertiary);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.history-item-btn:hover {
+  background: #e74c3c;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* 历史记录统计 */
+.history-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: var(--accent-gold);
+  transform: translateY(-3px);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 0.3rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* 清除历史按钮 */
+.clear-history-btn {
+  background: transparent;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.clear-history-btn:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+/* 分享按钮 */
+.btn-share {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-secondary) 100%);
+  color: white;
+}
+
+.btn-share:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+/* Toast 提示 */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  box-shadow: 0 5px 25px var(--shadow-color);
+  border: 1px solid var(--border-color);
+  font-size: 0.95rem;
+  z-index: 3000;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast.success {
+  border-color: #27ae60;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+}
+
+.toast.error {
+  border-color: #e74c3c;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+}

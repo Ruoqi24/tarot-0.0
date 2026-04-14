@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TARO - 塔罗牌抽卡与解读</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+  <!-- 设置按钮 -->
+  <button class="settings-toggle" id="settingsToggle" title="AI设置" onclick="openAiConfig()">
+    ⚙️
+  </button>
+
+  <!-- 主题切换按钮 -->
+  <button class="theme-toggle" id="themeToggle" title="切换主题">
+    <span id="themeIcon">🌙</span>
+  </button>
+
+  <!-- ==================== 首页 ==================== -->
+  <section class="page home-page active" id="homePage">
+    <div class="logo">
+      <div class="logo-icon">🔮</div>
+      <h1>TARO</h1>
+      <p class="subtitle">塔罗牌 · 指引 · 智慧</p>
+    </div>
+
+    <p class="tagline">
+      在牌卡的镜像中，看见内心的指引<br>
+      每一张牌，都是命运给你的讯息
+    </p>
+
+    <div class="home-buttons">
+      <button class="btn btn-primary btn-lg" onclick="showPage('spreadPage')">
+        ✨ 开始占卜
+      </button>
+      <button class="btn btn-secondary" onclick="showPage('historyPage')">
+        📜 历史记录
+      </button>
+      <button class="btn btn-secondary" onclick="showAbout()">
+        📖 关于塔罗
+      </button>
+    </div>
+
+    <footer class="footer">
+      <p>选择牌阵 · 专注提问 · 抽取牌卡 · 获得指引</p>
+    </footer>
+  </section>
+
+  <!-- ==================== 牌阵选择页 ==================== -->
+  <section class="page spread-page" id="spreadPage">
+    <div class="page-header">
+      <h2>选择牌阵</h2>
+      <p>不同的牌阵适用于不同的问题，选择最适合你当下状况的牌阵</p>
+    </div>
+
+    <div class="spread-grid" id="spreadGrid">
+      <!-- 牌阵卡片由JS动态生成 -->
+    </div>
+
+    <!-- 牌阵说明弹窗 -->
+    <div class="spread-modal" id="spreadModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody">
+          <!-- 内容由JS填充 -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 抽牌页 ==================== -->
+  <section class="page draw-page" id="drawPage">
+    <div class="draw-container">
+      <div class="page-header">
+        <h2 id="drawSpreadName">抽牌</h2>
+        <p id="drawSpreadDesc">点击牌堆抽取你的牌</p>
+      </div>
+
+      <!-- 问题输入 -->
+      <div class="question-section">
+        <input type="text" id="userQuestion" placeholder="在此输入你的问题（可选）...">
+      </div>
+
+      <!-- 牌位槽 -->
+      <div class="card-slots" id="cardSlots">
+        <!-- 由JS动态生成 -->
+      </div>
+
+      <!-- 牌堆 -->
+      <div class="deck-section">
+        <div class="deck-info">
+          <h3>塔罗牌堆</h3>
+          <p id="deckHint">集中精神，点击牌堆开始抽牌</p>
+        </div>
+        <div class="deck-area">
+          <div class="deck-card" id="deckCard" onclick="drawCard()">
+            <!-- 牌背图案 -->
+          </div>
+          <span class="deck-count" id="deckCount">剩余 78 张</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 解牌页 ==================== -->
+  <section class="page result-page" id="resultPage">
+    <div class="result-container">
+      <div class="page-header">
+        <h2>🔮 牌阵解读</h2>
+      </div>
+
+      <!-- 结果概览 -->
+      <div class="result-summary">
+        <div class="user-question" id="resultQuestion"></div>
+        <h3 class="result-title" id="resultSpreadName"></h3>
+        <p class="result-overview" id="resultOverview"></p>
+      </div>
+
+      <!-- 每张牌的详细解释 -->
+      <div class="result-cards" id="resultCards">
+        <!-- 由JS动态生成 -->
+      </div>
+
+      <!-- 整体分析 -->
+      <div class="overall-analysis">
+        <h3>整体分析</h3>
+        <div class="analysis-content" id="overallAnalysis"></div>
+        <div class="action-advice">
+          <h4>💫 给你的建议</h4>
+          <p id="actionAdvice"></p>
+        </div>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="result-actions">
+        <button class="btn btn-ai" onclick="openAiReading()">
+          🔮 AI深度解读
+        </button>
+        <button class="btn btn-share" onclick="shareResult()">
+          📤 分享结果
+        </button>
+        <button class="btn btn-primary" onclick="saveResult()">
+          💾 保存结果
+        </button>
+        <button class="btn btn-secondary" onclick="showPage('homePage')">
+          🔄 重新占卜
+        </button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>TARO · 塔罗牌指引 · 仅供娱乐参考</p>
+    </footer>
+  </section>
+
+  <!-- ==================== 历史记录页 ==================== -->
+  <section class="page history-page" id="historyPage">
+    <div class="history-container">
+      <div class="page-header">
+        <h2>📜 历史记录</h2>
+        <p>回顾你的塔罗之旅</p>
+      </div>
+
+      <!-- 统计卡片 -->
+      <div class="history-stats" id="historyStats">
+        <!-- 由JS动态生成 -->
+      </div>
+
+      <!-- 历史记录列表 -->
+      <div class="history-list" id="historyList">
+        <!-- 由JS动态生成 -->
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>TARO · 塔罗牌指引 · 仅供娱乐参考</p>
+    </footer>
+  </section>
+
+  <!-- Toast 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <!-- AI配置模态框 -->
+  <div class="modal" id="aiConfigModal">
+    <div class="modal-content ai-config-content">
+      <button class="modal-close" onclick="closeAiConfig()">×</button>
+      <h3>🔮 AI智能解读配置</h3>
+      <div class="ai-config-form">
+        <div class="form-group">
+          <label>选择AI模型</label>
+          <select id="aiModel" class="form-select">
+            <option value="simulated">✨ 模拟AI（无需配置）</option>
+            <option value="openai">🤖 OpenAI GPT</option>
+            <option value="anthropic">🧠 Anthropic Claude</option>
+            <option value="moonshot">🌙 Moonshot Kimi</option>
+          </select>
+        </div>
+        <div class="form-group api-key-group" id="apiKeyGroup" style="display: none;">
+          <label>API密钥</label>
+          <input type="password" id="apiKey" class="form-input" placeholder="输入你的API密钥">
+          <small class="form-hint">密钥仅保存在本地，不会上传到服务器</small>
+        </div>
+        <div class="form-group">
+          <label>解读风格</label>
+          <select id="aiStyle" class="form-select">
+            <option value="mystic">🔮 神秘学者风格</option>
+            <option value="warm">💫 温暖治愈风格</option>
+            <option value="direct">⚡ 直接果断风格</option>
+            <option value="poetic">📜 诗意浪漫风格</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>解读详细程度</label>
+          <select id="aiDetail" class="form-select">
+            <option value="brief">简洁（100字以内）</option>
+            <option value="normal" selected>标准（200-300字）</option>
+            <option value="detailed">详细（500字以上）</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveAiConfig()">保存配置</button>
+          <button class="btn btn-secondary" onclick="closeAiConfig()">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI解读模态框 -->
+  <div class="modal" id="aiReadingModal">
+    <div class="modal-content ai-reading-content">
+      <button class="modal-close" onclick="closeAiReading()">×</button>
+      <h3>🔮 AI深度解读</h3>
+      <div class="ai-reading-body">
+        <div class="ai-loading" id="aiLoading">
+          <div class="ai-loading-spinner"></div>
+          <p>AI正在解读牌意...</p>
+          <small id="aiLoadingDetail">分析牌阵结构中</small>
+        </div>
+        <div class="ai-result" id="aiResult" style="display: none;">
+          <div class="ai-result-header">
+            <span class="ai-badge" id="aiStyleBadge">神秘学者</span>
+            <span class="ai-time" id="aiReadingTime">耗时 2.3s</span>
+          </div>
+          <div class="ai-result-content" id="aiResultContent"></div>
+          <div class="ai-result-actions">
+            <button class="btn btn-secondary" onclick="regenerateAiReading()">🔄 重新生成</button>
+            <button class="btn btn-primary" onclick="copyAiReading()">📋 复制解读</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 加载数据文件 -->
+  <script src="js/cards.js"></script>
+  <script src="js/spreads.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- 控制台彩蛋 -->
+  <script>
+    console.log('%c🔮 TARO 塔罗牌抽卡', 'font-size: 24px; font-weight: bold; color: #c9a961;');
+    console.log('%c在牌卡的镜像中，看见内心的指引', 'font-size: 14px; color: #666;');
+    console.log('%c✨ 韦斯特风格 | 🧠 AI智能解读 - 全部完成!', 'font-size: 12px; color: #27ae60;');
+  </script>
+</body>
+</html>
